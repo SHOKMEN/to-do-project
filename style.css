@@ -1,0 +1,28 @@
+body {
+    background-color: #f4f6f8;
+}
+
+#todoApp {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.todo-item button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.todo-item button:hover {
+    background-color: #c82333;
+}
