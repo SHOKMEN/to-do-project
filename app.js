@@ -49,32 +49,63 @@ function createTodoList() {
 }
 
 // Функция добавления нового элемента в список дел
-function addTodoItem(taskText) {
+function addTodoItem(taskText, completed = false) {
     const todoList = document.querySelector('.todo-list'); // Ищем уже существующий список
 
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'todo-item');
 
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.classList.add('form-check-input', 'me-2');
+    checkbox.checked = completed;
+    checkbox.addEventListener('change', function () {
+        if (checkbox.checked) {
+            text.classList.add('completed');
+            li.classList.add('completed-item');
+            todoList.appendChild(li); // Переместить в конец списка
+        } else {
+            text.classList.remove('completed');
+            li.classList.remove('completed-item');
+            todoList.prepend(li); // Переместить в начало списка
+        }
+        saveTodoList(); // Сохраняем задачи после изменения
+    });
+
     const text = document.createElement('span');
     text.textContent = taskText;
+    if (completed) {
+        text.classList.add('completed');
+        li.classList.add('completed-item');
+    }
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Удалить';
+    deleteButton.classList.add('btn', 'btn-danger', 'ms-2');
     deleteButton.addEventListener('click', function () {
         li.remove();
         saveTodoList(); // Сохраняем задачи после удаления
     });
 
+    li.appendChild(checkbox);
     li.appendChild(text);
     li.appendChild(deleteButton);
 
-    todoList.appendChild(li);
+    if (completed) {
+        todoList.appendChild(li); // Добавить в конец списка если выполнено
+    } else {
+        todoList.prepend(li); // Добавить в начало списка если не выполнено
+    }
 }
 
 // Функция для сохранения списка задач в localStorage
 function saveTodoList() {
-    const todoItems = document.querySelectorAll('.todo-item span');
-    const tasks = Array.from(todoItems).map(item => item.textContent);
+    const todoItems = document.querySelectorAll('.todo-item');
+    const tasks = Array.from(todoItems).map(item => {
+        const text = item.querySelector('span').textContent;
+        const completed = item.querySelector('input[type="checkbox"]').checked;
+        return { text, completed };
+    });
     localStorage.setItem('todoList', JSON.stringify(tasks)); // Сохраняем список задач
 }
 
@@ -82,7 +113,7 @@ function saveTodoList() {
 function loadTodoList() {
     const savedTasks = JSON.parse(localStorage.getItem('todoList'));
     if (savedTasks && savedTasks.length > 0) {
-        savedTasks.forEach(task => addTodoItem(task)); // Загружаем все сохранённые задачи
+        savedTasks.forEach(task => addTodoItem(task.text, task.completed)); // Загружаем все сохранённые задачи
     }
 }
 

@@ -15,6 +15,15 @@ body {
     border-bottom: 1px solid #ddd;
 }
 
+.todo-item .completed {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.todo-item.completed-item {
+    background-color: #e9ecef;
+}
+
 .todo-item button {
     background-color: #dc3545;
     color: white;
